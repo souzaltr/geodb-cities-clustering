@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GeoDB Cities</title>
+    <link rel="stylesheet" href="/src/style.css">
+  </head>
+  <body>
+    <header>
+      <h1>GeoDB API</h1>
+    </header>
+
+    <main class="container">
+      <section class="panel left-panel">
+        <div class="panel-header">
+          <h2>Cidades disponíveis</h2>
+          <span id="total-results" class="badge">0 carregadas</span>
+        </div>
+        
+        <div id="cities-list" class="list-container"> </div>
+
+        <div class="actions">
+          <button id="btn-load" class="btn primary">Carregar mais</button>
+        </div>
+      </section>
+
+      <section class="panel right-panel">
+        <div class="panel-header">
+          <h2>Cidades selecionadas</h2>
+          <span id="selected-count" class="badge">0 selecionadas</span>
+        </div>
+
+        <div id="selected-list" class="list-container">
+          <p class="empty-msg">Nenhuma cidade selecionada.</p>
+        </div>
+        
+        <div class="actions">
+          <button id="btn-process" class="btn secondary" disabled>Processar dados</button>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

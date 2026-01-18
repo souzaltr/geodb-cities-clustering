@@ -110,6 +110,18 @@ header p { margin: 0; font-size: 0.8rem; opacity: 0.9; }
   text-align: center;
 }
 
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-info {
+  font-weight: bold;
+  color: var(--text);
+}
+
 .btn {
   padding: 10px 20px;
   border: none;
@@ -119,6 +131,15 @@ header p { margin: 0; font-size: 0.8rem; opacity: 0.9; }
   font-size: 0.9rem;
   width: 100%;
 }
+
+.btn-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.btn-remove:hover { transform: scale(1.2);}
 
 .btn.primary { background: var(--primary); color: white; }
 .btn.primary:hover { background: #1d4ed8; }

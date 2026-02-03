@@ -61,7 +61,7 @@ self.onmessage = async (e) => {
       }
 
     } catch (err) {
-      console.error("Erro ao tentar obter dados na página devido aos filtros", page, err.message);
+      console.error("Erro ao tentar obter dados na página ", page, err.message);
     }
   }
 

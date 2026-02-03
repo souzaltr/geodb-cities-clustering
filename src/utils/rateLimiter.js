@@ -1,14 +1,13 @@
-let lastTime = 0;
-const MIN_INTERVAL = 1100; // Poderia ser ajustado conforme plano da api, permitindo menos espera entre requests
+const MIN_INTERVAL = 1500; // Poderia ser ajustado conforme plano da api, permitindo menos espera entre requests
+        
+let queue = Promise.resolve();
 
-  export const waitForRateLimit = () => {
-  return new Promise((resolve) => {
-    const now = Date.now();
-    const wait = Math.max(0, MIN_INTERVAL - (now - lastTime));
+export const waitForRateLimit = () => {
+  queue = queue.then(() =>
+    new Promise(resolve => setTimeout(resolve, MIN_INTERVAL))
+  );
 
-    setTimeout(() => {
-      lastTime = Date.now();
-      resolve();
-    }, wait);
-  });
+  return queue;
 };
+        
+

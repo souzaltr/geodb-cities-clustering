@@ -15,7 +15,6 @@
       <section class="panel left-panel">
         <div class="panel-header">
           <h2>Cidades disponíveis</h2>
-          <span id="total-results" class="badge">0 carregadas</span>
         </div>
         
         <div id="cities-list" class="list-container"> </div>
@@ -33,11 +32,22 @@
           <p class="empty-msg">Nenhuma cidade selecionada.</p>
         </div>
         
-        <div class="actions">
-          <button id="btn-process" class="btn secondary" >Processar dados</button>
-        </div>
+
+        <div class="controls">
+  <label for="kValue">Valor de K:</label>
+  <input type="number" id="kValue" min="2" max="10" value="3" />
+
+  <button id="btn-process">Processar 10.000 cidades</button>
+</div>
+
+<hr>
+
+<div id="clusters"></div>
+
       </section>
     </main>
+
+
 
     <script type="module" src="/src/main.js"></script>
   </body>

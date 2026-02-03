@@ -59,6 +59,5 @@ export const render = (state, handlers) => {
     });
   }
 
-  document.getElementById("total-results").innerText = `Total: ${state.total}`;
   document.getElementById("selected-count").innerText = `${state.selectedCities.length} selecionadas`;
 };

@@ -12,7 +12,8 @@ export const fetchCities = async ({offset, limit}) => {
         const response = await geoDb.findCitiesUsingGET({
             limit,
             offset,
-            sort: 'name',
+            minPopulation: 1000,
+            sort: "population",
             types: 'CITY'
         });
         return {

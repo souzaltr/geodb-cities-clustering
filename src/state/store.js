@@ -27,9 +27,9 @@ export const reducer = (state, action) => {
         case "REMOVE_CITY":
             return {
                 ...state,
-                selectedCities: state.selectedCities.filter(c => c.id !== action.payload)
+                selectedCities: state.selectedCities.filter(c => String(c.id) !== String(action.payload))
             };
-        
+    
         default:
             return state;
     }

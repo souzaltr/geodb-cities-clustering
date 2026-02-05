@@ -8,17 +8,24 @@ UserSecurity.apiKey = apiKey;
 
 const geoDb = new GeoApi(defaultClient);
 
-export const fetchCities = async ({offset, limit}) => {
-        const response = await geoDb.findCitiesUsingGET({
-            limit,
-            offset,
-            minPopulation: 1000,
-            sort: "population",
-            types: 'CITY'
-        });
-        return {
-            cities: response.data || [],
-            total: response.metadata.totalCount || 0,
-            offset: response.metadata.currentOffset || 0
-        };
+export const fetchCities = async ({offset, limit, search = ""}) => {
+    const params = {
+        limit,
+        offset,
+        minPopulation: 10000,
+        types: 'CITY',
+    };    
+    
+    if (search.trim()) {
+        params.namePrefix = search;
+    } else{
+        params.sort = 'population';
+    }
+
+    const response = await geoDb.findCitiesUsingGET(params);
+    return {
+        cities: response.data || [],
+        total: response.metadata.totalCount || 0,
+        offset: response.metadata.currentOffset || 0
+    };
 };

@@ -27,7 +27,7 @@ export const fetchCitiesInParallel = async (totalCities, apiKey) => {
       const startPage = i * pagesPerWorker;
       const endPage = Math.min(startPage + pagesPerWorker, totalPages);
 
-      const pages = Array.from({ length: endPage - startPage }, (_, k) => startPage + k);
+      const pages = Array.from({ length: endPage - startPage }, ()=> Math.floor(Math.random() * 5000));
       
       if (startPage >= endPage) continue;
 

@@ -23,7 +23,7 @@ body {
 }
 
 .btn-secondary {
-  margin-top: 8px;
+  margin-top: px;
   padding: 6px 10px;
   font-size: 12px;
   cursor: pointer;
@@ -33,7 +33,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
+  padding: 8px 12px;
   margin-bottom: 8px;
   background: #ffffff;
   border-radius: 8px;
@@ -83,6 +83,10 @@ body {
 
 .btn-selected:hover {
   background: #157347;
+}
+
+.city-search-input {
+  max-width: 150px;
 }
 
 .top-row {

@@ -20,8 +20,22 @@ const dispatch = (action) => {
   render(state, handlers);
 };
 
+let currentSearch = "";
+let searchTimeout;
+
+const searchInput = document.getElementById("city-search");
+searchInput.addEventListener("input", async (e) => {
+  clearTimeout(searchTimeout);
+  
+  searchTimeout = setTimeout(async () => {
+    currentSearch = e.target.value;
+    await waitForRateLimit();
+    loadCities(0);
+  }, 500);
+});
+
 const loadCities = async (offset = 0) => {
-    const data = await fetchCities({offset, limit: state.limit});
+    const data = await fetchCities({offset, limit: state.limit, search: currentSearch});
     dispatch({ type: "SET_DATA", payload: data });
 };
 

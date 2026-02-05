@@ -26,7 +26,7 @@ let searchTimeout;
 const searchInput = document.getElementById("city-search");
 searchInput.addEventListener("input", async (e) => {
   clearTimeout(searchTimeout);
-  
+
   searchTimeout = setTimeout(async () => {
     currentSearch = e.target.value;
     await waitForRateLimit();
@@ -143,9 +143,21 @@ document.getElementById("btn-process").addEventListener("click", async () => {
     const btn = document.getElementById("btn-process");
     const k = Number(document.getElementById("kValue").value);
     
+    if(!k || k <= 1){
+      alert("Valor de K de ser maior que 1");
+      return;
+    }
+
     btn.disabled = true;
     btn.innerText = "Carregando as cidades para K-means";
     const { buffer, count} = await fetchCitiesInParallel(50, import.meta.env.VITE_API_KEY);
+
+    if(count < k){
+      alert(`Número de cidades carregadas (${count}) é menor que K (${k}).`);
+      btn.disabled = false;
+      btn.innerText = "Processar cidades";
+      return;
+    }
 
     btn.innerText = "Dados carregados! Iniciando K-means";
     const { centroids, assignments } = await startKmeans(buffer, count,k, state.selectedCities);

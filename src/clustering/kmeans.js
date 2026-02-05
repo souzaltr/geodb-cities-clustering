@@ -1,26 +1,6 @@
 const CITY_FIELDS = 4; // lat, lon, pop, id
 
-const createRandomCentroids = (citiesArray, count, k) => {
-  const centroids = [];
-  const used = new Set();
-
-  while (centroids.length < k) {
-    const idx = Math.floor(Math.random() * count);
-    if (used.has(idx)) continue;
-    used.add(idx);
-
-    const base = idx * CITY_FIELDS;
-
-    centroids.push({
-      lat: citiesArray[base],
-      lon: citiesArray[base + 1],
-      pop: citiesArray[base + 2]
-    });
-  }
-  return centroids;
-};
-
-const recomputeCentroids = (citiesArray, assignments, k) => {
+const recomputeCentroids = (citiesArray, assignments, k, count) => {
   const clusters = Array.from({ length: k }, () => []);
 
   assignments.forEach(({ index, cluster }) => {
@@ -33,7 +13,15 @@ const recomputeCentroids = (citiesArray, assignments, k) => {
   });
 
   return clusters.map(cluster => {
-    if (cluster.length === 0) return null;
+    if (cluster.length === 0) {
+      const rand = Math.floor(Math.random() * count);
+      const base = rand * CITY_FIELDS;
+      return {
+        lat: citiesArray[base],
+        lon: citiesArray[base+1],
+        pop: citiesArray[base+2]
+      };
+    }
 
     const sum = cluster.reduce((acc, c) => ({
       lat: acc.lat+c.lat,
@@ -59,14 +47,53 @@ const centroidsChanged = (a, b) => {
   );
 };
 
-export const startKmeans = async (citiesBuffer, count, k) => {
+const createInitialCentroids = (citiesArray, count, k, selectedCities = []) => {
+  const centroids = [];
+  const used = new Set();
+
+  const datasetIds = new Set();
+  for (let i = 0; i < count; i++) {
+    datasetIds.add(citiesArray[i * CITY_FIELDS + 3]);
+  }
+
+  selectedCities.forEach(city => {
+    if (centroids.length >= k) return;
+
+    if(!datasetIds.has(city.id)) return;
+
+    centroids.push({
+      lat: city.lat,
+      lon: city.lon,
+      pop: city.pop 
+    });
+  });
+
+  // Se selecionou menos cidades do que k, então, completa com cidades aleatórias do dataset
+  while (centroids.length < k) {
+    const idx = Math.floor(Math.random() * count);
+    if (used.has(idx)) continue;
+    used.add(idx);
+
+    const base = idx * CITY_FIELDS;
+
+    centroids.push({
+      lat: citiesArray[base],
+      lon: citiesArray[base + 1],
+      pop: citiesArray[base + 2]
+    });
+  }
+
+  return centroids;
+};
+
+export const startKmeans = async (citiesBuffer, count, k, selectedCities = []) => {
   const citiesArray = new Float64Array(citiesBuffer);
 
   const MAX_WORKERS = navigator.hardwareConcurrency || 4;
   const workers = [];
   const chunkSize = Math.ceil(count/MAX_WORKERS);
 
-  let centroids = createRandomCentroids(citiesArray, count, k);
+  let centroids = createInitialCentroids(citiesArray, count, k, selectedCities);
   let assignments = [];
   let iteration = 0;
   const MAX_ITER = 10;
@@ -103,7 +130,7 @@ export const startKmeans = async (citiesBuffer, count, k) => {
     workers.forEach(w => w.terminate());
     workers.length = 0;
 
-    const newCentroids = recomputeCentroids(citiesArray, assignments, k);
+    const newCentroids = recomputeCentroids(citiesArray, assignments, k, count);
 
     if (!centroidsChanged(centroids, newCentroids)) break;
 

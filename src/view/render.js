@@ -41,23 +41,24 @@ export const render = (state, handlers) => {
 
   const selectedList = document.getElementById("selected-list");
 
-  if (state.selectedCities.length === 0) {
-    selectedList.innerHTML = '<p class="empty-msg">Nenhuma cidade selecionada.</p>';
-  } else {
-    selectedList.innerHTML = state.selectedCities.map(city => `
-      <div class="city-card" style="border-color: var(--secondary)">
-        <div class="city-info">
-          <h3>${city.name}</h3>
-          <p>Lat: ${city.latitude} | Lon: ${city.longitude}</p>
-        </div>
-        <button class="btn-remove" data-id="${city.id}">✖</button>
-      </div>
-    `).join("");
+  selectedList.innerHTML = "";
 
-    document.querySelectorAll(".btn-remove").forEach(btn => {
-      btn.addEventListener("click", () => onRemove(btn.dataset.id));
-    });
-  }
+  state.selectedCities.forEach(city => {
+    const row = document.createElement("div");
+    row.className = "selected-city-item";
+
+    const info = document.createElement("span");
+    info.textContent = `${city.name} - ${city.countryCode}`;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "btn-remove";
+    removeBtn.textContent = "✕";
+    removeBtn.onclick = () => handlers.onRemove(city.id);
+
+    row.appendChild(info);
+    row.appendChild(removeBtn);
+    selectedList.appendChild(row);
+  });
 
   document.getElementById("selected-count").innerText = `${state.selectedCities.length} selecionadas`;
 };

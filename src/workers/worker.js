@@ -1,7 +1,7 @@
 const BASE_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo/cities";
 
 async function fetchCitiesPage(apiKey, limit, offset) {
-  const res = await fetch(`${BASE_URL}?limit=${limit}&offset=${offset}&types=CITY&sort=-population`, {
+  const res = await fetch(`${BASE_URL}?limit=${limit}&offset=${offset}&types=CITY&minPopulation=1000&sort=population`, {
     headers: {
       "X-RapidAPI-Key": apiKey,
       "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com"
@@ -57,7 +57,17 @@ self.onmessage = async (e) => {
         citiesArray[base]     = city.latitude;
         citiesArray[base + 1] = city.longitude;
         citiesArray[base + 2] = city.population || 0;
-        citiesArray[base + 3] = city.id;
+        citiesArray[base + 3] = writeIndex;
+
+        postMessage({ 
+          type: "city-meta",
+          city: {
+            index: writeIndex,
+            id: city.id,
+            name: city.name,
+            country: city.countryCode
+          }
+        });
       }
 
     } catch (err) {

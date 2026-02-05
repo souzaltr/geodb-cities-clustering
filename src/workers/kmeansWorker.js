@@ -17,6 +17,8 @@ self.onmessage = (e) => {
     let cluster = 0;
 
     centroids.forEach((c, idx) => {
+      if(!c) return;
+
       const lat = city.lat - c.lat;
       const lon = city.lon - c.lon;
       const population = (city.pop - c.pop) / 1_000_000;

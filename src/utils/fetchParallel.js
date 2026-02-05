@@ -2,6 +2,8 @@ import { waitForRateLimit } from "./rateLimiter";
 
 const CITY_FILDS = 4; // tamanho necessário no buffer para (id, lon, lat, pop)
 
+export const kmeansCityMap = new Map();
+
 export const fetchCitiesInParallel = async (totalCities, apiKey) => {
   const limit = 10;
   const totalPages = Math.ceil(totalCities / limit);
@@ -40,11 +42,15 @@ export const fetchCitiesInParallel = async (totalCities, apiKey) => {
       });
 
       worker.onmessage = async (e) => {
-        const { type } = e.data;
+        const { type, city } = e.data;
 
         if (type === "request-permission") {
           await waitForRateLimit();
           worker.postMessage({ type: "granted" });
+        }
+
+        if (type === "city-meta") {
+          kmeansCityMap.set(city.index, city);
         }
 
         if (type === "done") {

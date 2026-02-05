@@ -3,26 +3,44 @@ export const render = (state, handlers) => {
 
   const citiesList = document.getElementById("cities-list");
   
-  citiesList.innerHTML = state.loadedCities.map(city => {
-    const isSelected = state.selectedCities.some(c => c.id === city.id);
-    return `
-      <div class="city-card ${isSelected ? 'added' : 'js-add-city'}" data-id="${city.id}">
-        <div class="city-info">
-          <h3>${city.name}</h3>
-          <p>${city.country} | Pop: ${city.population?.toLocaleString() ?? 'Indisponível'}</p>
-        </div>
-        <div>${isSelected ? 'selecionada' : 'selecionar'}</div>
-      </div>
-    `;
-  }).join("");
+  citiesList.innerHTML = "";
 
-  document.querySelectorAll(".js-add-city").forEach(el => {
-    el.addEventListener("click", () => {
-      const id = el.dataset.id;
-      const city = state.loadedCities.find(c => String(c.id) === String(id));
-      if (city) onAdd(city);
-    });
-  });
+state.loadedCities.forEach(city => {
+  const isSelected = state.selectedCities.some(c => c.id === city.id);
+
+  const cityRow = document.createElement("div");
+  cityRow.className = "city-item";
+
+  const info = document.createElement("div");
+  info.className = "city-info";
+
+  const name = document.createElement("div");
+  name.className = "city-name";
+  name.textContent = `${city.name} - ${city.country}`;
+
+  const pop = document.createElement("div");
+  pop.className = "city-pop";
+  pop.textContent = `População: ${city.population?.toLocaleString() ?? 'Indisponível'}`;
+
+  info.appendChild(name);
+  info.appendChild(pop);
+
+  const btn = document.createElement("button");
+  btn.className = isSelected ? "btn-selected" : "btn-select";
+  btn.textContent = isSelected ? "Selecionada ✓" : "Selecionar";
+
+  btn.onclick = () => {
+    if (isSelected) {
+      onRemove(city.id);
+    } else {
+      onAdd(city);
+    }
+  };
+
+  cityRow.appendChild(info);
+  cityRow.appendChild(btn);
+  citiesList.appendChild(cityRow);
+});
 
   const pagination = document.getElementById("pagination");
 

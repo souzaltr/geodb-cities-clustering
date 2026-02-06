@@ -152,7 +152,7 @@ document.getElementById("btn-process").addEventListener("click", async () => {
     btn.disabled = true;
     btn.innerText = "Carregando as cidades para K-means";
     
-    const res = await fetch("http://localhost:3001/cities");
+    const res = await fetch("http://backend:3001/cities");
     const cities = await res.json();
 
     const CITY_FIELDS = 4;

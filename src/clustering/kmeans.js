@@ -51,21 +51,14 @@ const createInitialCentroids = (citiesArray, count, k, selectedCities = []) => {
   const centroids = [];
   const used = new Set();
 
-  const datasetIds = new Set();
-  for (let i = 0; i < count; i++) {
-    datasetIds.add(citiesArray[i * CITY_FIELDS + 3]);
-  }
-
   selectedCities.forEach(city => {
-    if (centroids.length >= k) return;
-
-    if(!datasetIds.has(city.id)) return;
-
-    centroids.push({
-      lat: city.lat,
-      lon: city.lon,
-      pop: city.pop 
-    });
+    if (centroids.length < k) { 
+      centroids.push({
+        lat: city.lat,
+        lon: city.lon,
+        pop: city.pop 
+      });
+    }
   });
 
   // Se selecionou menos cidades do que k, então, completa com cidades aleatórias do dataset

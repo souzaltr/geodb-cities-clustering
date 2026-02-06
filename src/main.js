@@ -1,9 +1,10 @@
-import { fetchCities } from "./api/apiService";
+
 import { initialState, reducer } from "./state/store";
 import { waitForRateLimit } from "./utils/rateLimiter";
 import { render } from "./view/render";
 import {fetchCitiesInParallel, kmeansCityMap } from "./utils/fetchParallel";
 import { startKmeans } from "./clustering/kmeans";
+import { fetchCities } from "./services/apiService";
 
 let state = initialState;
 
@@ -150,8 +151,31 @@ document.getElementById("btn-process").addEventListener("click", async () => {
 
     btn.disabled = true;
     btn.innerText = "Carregando as cidades para K-means";
-    const { buffer, count} = await fetchCitiesInParallel(50, import.meta.env.VITE_API_KEY);
+    
+    const res = await fetch("http://localhost:3001/cities");
+    const cities = await res.json();
 
+    const CITY_FIELDS = 4;
+    const buffer = new SharedArrayBuffer(Float64Array.BYTES_PER_ELEMENT * CITY_FIELDS * cities.length);
+    const citiesArray = new Float64Array(buffer);
+
+    const kmeansCityMap = new Map();
+
+    cities.forEach((city, i) => {
+    const base = i * CITY_FIELDS;
+    citiesArray[base]     = city.latitude;
+    citiesArray[base + 1] = city.longitude;
+    citiesArray[base + 2] = city.population || 0;
+    citiesArray[base + 3] = city.id;
+
+    kmeansCityMap.set(i, {
+      name: city.name,
+      country: city.countryCode
+    });
+    });
+
+    const count = cities.length;
+    
     if(count < k){
       alert(`Número de cidades carregadas (${count}) é menor que K (${k}).`);
       btn.disabled = false;

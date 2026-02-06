@@ -19,8 +19,8 @@ self.onmessage = (e) => {
     centroids.forEach((c, idx) => {
       if(!c) return;
 
-      const lat = city.lat - c.lat;
-      const lon = city.lon - c.lon;
+      const lat = (city.lat - c.lat) / 90;
+      const lon = (city.lon - c.lon) / 180;
       const population = (city.pop - c.pop) / 1_000_000;
 
       const dist = Math.sqrt(lat*lat + lon*lon + population*population);

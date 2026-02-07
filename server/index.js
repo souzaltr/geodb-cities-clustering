@@ -10,7 +10,7 @@ app.use(cors({
 }));
 const PORT = 3001;
 
-const FILE = "./public/data/cities.json";
+const FILE = "./data/cities.json";
 const API_KEY = process.env.VITE_API_KEY;
 const TARGET = 10000;
 
@@ -47,7 +47,7 @@ app.get("/cities", async (req, res) => {
 
   allCities = allCities.slice(0, TARGET);
 
-  fs.mkdirSync("./public/data", { recursive: true });
+  fs.mkdirSync("./data", { recursive: true });
   fs.writeFileSync(FILE, JSON.stringify(allCities, null, 2));
 
   res.json(allCities);

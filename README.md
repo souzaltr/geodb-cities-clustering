@@ -49,7 +49,8 @@ O projeto foi desenvolvido para fins de aprendizado com foco em:
 │   ├── utils/           # Funções utilitárias
 │   └── view/            # Interface
 ├── server/              # Backend 
-│   └── index.js         # Servidor e proxy para a API, JSON 
+│   └── index.js         # Servidor e proxy para a API, JSON
+│   └── data/            # Repositório de cidades carregadas 
 ├── docker-compose.yml
 ```
 ---
